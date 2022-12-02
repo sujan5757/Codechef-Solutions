@@ -1,0 +1,27 @@
+//Problem
+Somu went to the gym today. He decided to do XX sets of squats. Each set consists of 1515 squats. Determine the total number of squats that he did today.
+
+Input Format
+The first line contains a single integer TT — the number of test cases. Then the test cases follow.
+The first and only line of each test case contains an integer XX — the total number of sets of squats that Somu did.
+Output Format
+For each test case, output the total number of squats done by Somu.
+//
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+/* Name of the class has to be "Main" only if the class is public. */
+class Codechef
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+	    Scanner s=new Scanner(System.in);
+	    int n=s.nextInt();
+	    for(int i=0;i<n;i++){
+	        int a=s.nextInt();
+	        System.out.println(15*a);
+	    }
+		// your code goes here
+	}
+}
