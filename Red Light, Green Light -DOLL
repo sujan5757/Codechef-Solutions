@@ -1,0 +1,25 @@
+// C programming
+
+#include <stdio.h>
+
+int main()
+{
+    int t,m,n,i,j,arr[1000000],count=0,k;
+    scanf("%d",&t);
+    for(i=0;i<t;i++)
+    {
+        count=0;
+     scanf("%d%d",&m,&n);  
+     for(j=0;j<m;j++)
+     {
+         scanf("%d",&arr[j]);
+          if(arr[j]>n)
+         {
+             count++;
+         }
+     }
+     printf("%d\n",count);
+    }
+	return 0;
+}
+
