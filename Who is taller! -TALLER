@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+int main(void) {
+	int R,i;
+scanf("%d",&R);
+for(i=1;i<=R;i++){
+int P,Q;
+scanf("%d%d",&P,&Q);
+if(P<Q)
+printf("B\n");
+else
+printf("A\n");
+}
+	return 0;
+}
