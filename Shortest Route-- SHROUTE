@@ -1,0 +1,147 @@
+#include<bits/stdc++.h>
+
+#define nl << endl
+#define lend cout << endl;
+#define sp << " "
+#define ll long long int
+#define pb push_back
+#define emp emplace
+#define popb pop_back();
+#define all(x) x.begin() , x.end()
+#define sortAll(x) sort(all(x))
+
+#define yes() cout << "YES"
+#define no() cout << "NO"
+
+#define HashSet unordered_set
+#define HashMap unordered_map
+#define vll vector<ll>
+#define vvll vector<vll>
+#define vcc vector<char>
+#define vvcc vector<vcc>
+
+const ll MOD = 1e9 + 7;
+
+using namespace std;
+using namespace std::chrono;
+
+//Hash Function for Vector
+struct Vector {
+    template<typename t>
+    size_t operator()(const vector<t> &myVector) const {
+        std::hash<t> hasher;
+        size_t answer = 0;
+        for (ll i : myVector)
+            answer ^= hasher(i) + 0x9e3779b9 + (answer << 6) + (answer >> 2);
+        return answer;
+    }
+};
+
+//Hash Function for Pair
+struct Pair {
+    template<typename t1, typename t2>
+    size_t operator()(const pair<t1, t2> &p) const {
+        auto hash1 = hash<t1> {} (p.first);
+        auto hash2 = hash<t2> {} (p.second);
+
+        if(hash1 != hash2) return hash1 ^ hash2;
+        return hash1;
+    }
+};
+inline ll HCF(ll a, ll b) {
+    return b == 0 ? a : HCF(b, a % b);
+}
+inline ll LCM(ll a, ll b) {
+    ll hf = HCF(a, b);
+    return (a * b) / hf;
+}
+inline ll power(ll x, ll y) {
+    const ll mod = 1e9+9;
+    ll ans = 1;
+    while(y) {
+        if(y % 2) ans = (ans * x) % mod;
+        x = (x * x) % mod ;
+        y /= 2;
+    }
+    return ans;
+}
+template<class T> inline istream& operator>>(istream &in, vector<T> &arr) {
+    for(auto &it : arr) in >> it;
+    return in;
+}
+template<class T> inline ostream& operator<<(ostream &out, vector<T> &arr) {
+    for(auto &it : arr) out << it sp;
+    return out;
+}
+//************************************//
+//************END OF TEMPLATE*********//
+//************************************//
+
+
+class Solution {
+
+    inline void preProcess() {
+
+    }
+    
+    inline void getMeTheSolution() {
+        ll n , m;
+        cin >> n >> m;
+        
+        vll A(n + 1) , B(m);
+        vll left(n + 1 , MOD) , right(n + 1 , MOD);
+        
+        for(ll idx = 1 ; idx <= n ; idx++) {
+            cin >> A[idx];
+            if(A[idx] == 1) right[idx] = 0;
+            if(A[idx] == 2) left[idx] = 0;
+        }
+        cin >> B;
+        
+        for(ll idx = 1 ; idx <= n ; idx++) right[idx] = min(right[idx] , right[idx - 1] + 1);
+        for(ll idx = n - 1 ; idx >= 1 ; idx--) left[idx] = min(left[idx] , left[idx + 1] + 1);
+        
+        left[1] = right[1] = 0;
+        for(ll idx = 0 ; idx < m ; idx++) {
+            ll mini = min(left[B[idx]] , right[B[idx]]);
+            if(mini > n) cout << -1 sp;
+            else cout << mini sp; 
+        }
+        lend; 
+    }
+
+public:
+
+    Solution() {
+        auto startTime = high_resolution_clock::now();
+        /*************************/
+        ll t = 1;
+        cin >> t;
+
+        preProcess();
+
+        for(ll tcase = 1 ; tcase <= t ; tcase++) {
+            getMeTheSolution();
+        }
+        /*************************/
+        auto endTime = high_resolution_clock::now();
+        auto diff = duration_cast<microseconds>(endTime - startTime);
+
+#ifndef ONLINE_JUDGE
+        lend;
+        cout << "Finished in : " << diff.count() / 1000 << " ms";
+        lend;
+#endif
+    }
+    ~Solution() {}
+};
+
+int main() {
+    ios_base :: sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    Solution *instance = new Solution();
+    delete instance;
+    return 0;
+}
