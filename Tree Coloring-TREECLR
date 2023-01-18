@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+#define N	1000000
+#define MD	1000000007
+
+int main() {
+	static int dd[N];
+	int n, c, h, i, j, ans;
+
+	scanf("%d%d", &n, &c);
+	for (h = 0; h < n - 1; h++) {
+		scanf("%d%d", &i, &j), i--, j--;
+		dd[i]++, dd[j]++;
+	}
+	ans = c;
+	for (i = 0; i < n; i++)
+		for (h = i == 0 ? 0 : 1; h < dd[i]; h++)
+			ans = (long long) ans * (c - 1 - h) % MD;
+	printf("%d\n", ans);
+	return 0;
+}
