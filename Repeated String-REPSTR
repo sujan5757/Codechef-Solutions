@@ -1,0 +1,181 @@
+/*
+ * Code Author: Akshay Miterani
+ * DA-IICT
+ */
+import java.io.*;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.*;
+ 
+ 
+ 
+class Main {
+ 
+	static double eps=(double)1e-6;
+	static int mod=(int)1e9+7;
+	public static void main(String args[]){
+		InputReader in = new InputReader(System.in);
+		OutputStream outputStream = System.out;
+		PrintWriter out = new PrintWriter(outputStream);
+		//----------My Code----------
+		while(true){
+			int l=in.nextInt();
+			int h=in.nextInt();
+			if(l==0 && h==0)
+				break;
+			String s=in.nextLine();
+			int sa[]=suffixArray(s);
+			int lcp[]=lcp(sa, s);
+			int needed=0;
+			int count=0;
+			for(int x:lcp){
+				if(x>=l)
+					count++;
+				else
+					count=0;
+				if(count+1>needed){
+					needed=count+1;
+				}
+			}
+			int high=h,low=l,mid=-1;
+			int ans=0;
+			while(low<=high){
+				mid=(low+high)/2;
+				int temp=0;
+				count=0;
+				for(int x:lcp){
+					if(x>=mid)
+						count++;
+					else
+						count=0;
+					if(count+1>temp){
+						temp=count+1;
+					}
+				}
+				if(temp>=needed){
+					low=mid+1;
+				}
+				else{
+					high=mid-1;
+				}
+			}
+			out.println(needed+" "+high);
+		}
+		out.close();
+		//---------------The End------------------
+ 
+	}
+	// sort suffixes of S in O(n*log(n))
+	  public static int[] suffixArray(CharSequence S) {
+	    int n = S.length();
+	    Integer[] order = new Integer[n];
+	    for (int i = 0; i < n; i++)
+	      order[i] = n - 1 - i;
+ 
+	    // stable sort of characters
+	    Arrays.sort(order, new MyComparator(S));
+ 
+	    int[] sa = new int[n];
+	    int[] classes = new int[n];
+	    for (int i = 0; i < n; i++) {
+	      sa[i] = order[i];
+	      classes[i] = S.charAt(i);
+	    }
+	    // sa[i] - suffix on i'th position after sorting by first len characters
+	    // classes[i] - equivalence class of the i'th suffix after sorting by first len characters
+ 
+	    for (int len = 1; len < n; len *= 2) {
+	      int[] c = classes.clone();
+	      for (int i = 0; i < n; i++) {
+	        // condition sa[i - 1] + len < n simulates 0-symbol at the end of the string
+	        // a separate class is created for each suffix followed by simulated 0-symbol
+	        classes[sa[i]] = i > 0 && c[sa[i - 1]] == c[sa[i]] && sa[i - 1] + len < n && c[sa[i - 1] + len / 2] == c[sa[i] + len / 2] ? classes[sa[i - 1]] : i;
+	      }
+	      // Suffixes are already sorted by first len characters
+	      // Now sort suffixes by first len * 2 characters
+	      int[] cnt = new int[n];
+	      for (int i = 0; i < n; i++)
+	        cnt[i] = i;
+	      int[] s = sa.clone();
+	      for (int i = 0; i < n; i++) {
+	        // s[i] - order of suffixes sorted by first len characters
+	        // (s[i] - len) - order of suffixes sorted only by second len characters
+	        int s1 = s[i] - len;
+	        // sort only suffixes of length > len, others are already sorted
+	        if (s1 >= 0)
+	          sa[cnt[classes[s1]]++] = s1;
+	      }
+	    }
+	    return sa;
+	  }
+	// longest common prefixes array in O(n)
+    public static int[] lcp(int[] sa, CharSequence s) {
+        int n = sa.length;
+        int[] rank = new int[n];
+        for (int i = 0; i < n; i++)
+            rank[sa[i]] = i;
+        int[] lcp = new int[n - 1];
+        for (int i = 0, h = 0; i < n; i++) {
+            if (rank[i] < n - 1) {
+                for (int j = sa[rank[i] + 1]; Math.max(i, j) + h < s.length() && s.charAt(i + h) == s.charAt(j + h); ++h)
+                    ;
+                lcp[rank[i]] = h;
+                if (h > 0)
+                    --h;
+            }
+        }
+        return lcp;
+    }
+	static class MyComparator implements Comparator<Integer> {
+		private final CharSequence S;
+		public MyComparator(CharSequence S)
+		{
+			this.S=S;
+		}
+		@Override
+		public int compare(Integer index1, Integer index2)
+		{
+			return Character.compare(S.charAt(index1), S.charAt(index2));
+		}
+	}
+	
+	static class InputReader {
+		public BufferedReader reader;
+		public StringTokenizer tokenizer;
+ 
+		public InputReader(InputStream inputstream) {
+			reader = new BufferedReader(new InputStreamReader(inputstream));
+			tokenizer = null;
+		}
+ 
+		public String nextLine(){
+			String fullLine=null;
+			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+				try {
+					fullLine=reader.readLine();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+				return fullLine;
+			}
+			return fullLine;
+		}
+		public String next() {
+			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+				try {
+					tokenizer = new StringTokenizer(reader.readLine());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return tokenizer.nextToken();
+		}
+		public long nextLong() {
+			return Long.parseLong(next());
+		}
+		public int nextInt() {
+			return Integer.parseInt(next());
+		}
+	}
+}    
