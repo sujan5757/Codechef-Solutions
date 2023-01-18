@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int main(void) {
+	int t;
+	scanf("%d",&t);
+	while(t--)
+	{
+    	long long int v=1000000000,a,b,c,d,temp1,temp2,x1,x2,y1,y2,ans;
+    	printf("Q 0 0\n");
+    	fflush(stdout);
+    	scanf("%lld",&a);
+    	printf("Q 0 %ld\n",v);
+    	fflush(stdout);
+    	scanf("%lld",&b);
+    	printf("Q %lld 0\n",v);
+    	fflush(stdout);
+    	scanf("%lld",&c);
+        temp1=a-c+v;
+        printf("Q %lld 0\n",(temp1)/2);
+        fflush(stdout);
+        scanf("%lld",&y1);
+        temp2=a-b+v;
+        printf("Q %lld %lld\n",v,(temp2)/2);
+        fflush(stdout);
+        scanf("%lld",&x2);
+        x2=v-x2;
+        printf("Q %lld %lld\n",(temp1)/2,v);
+	    fflush(stdout);
+	    scanf("%lld",&y2);
+	    y2=v-y2;
+	    printf("Q 0 %lld\n",(temp2)/2);
+	    fflush(stdout);
+	    scanf("%ld",&x1);
+	    printf("A %lld %lld %lld %lld\n",x1,y1,x2,y2);
+	    fflush(stdout);
+	    scanf("%ld",&ans);
+	}
+	return 0;
+}
