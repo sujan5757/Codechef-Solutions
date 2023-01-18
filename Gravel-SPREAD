@@ -1,0 +1,117 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+#define all(a) (a).begin(), (a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+
+const ll mx = 2e6 + 123;
+ll v[mx], v1[mx];
+struct st_lazy
+{
+
+    ll t[4 * mx];
+    ll lazy[4 * mx]; // set by x
+    st_lazy()
+    {
+        memset(t, 0, sizeof(t));
+        memset(lazy, 0, sizeof(lazy));
+    }
+    void build(ll nod, ll a, ll b)
+    {
+        lazy[nod] = 0;
+
+        if (a == b)
+        {
+            t[nod] = v[a];
+            return;
+        }
+        ll mid = (a + b) >> 1;
+        build(nod << 1, a, mid);
+        build(nod << 1 | 1, mid + 1, b);
+        // t[nod] = min(t[nod << 1], t[nod << 1 | 1]);
+    }
+    void push(ll nod, ll a, ll b)
+    {
+        if (lazy[nod] == 0)
+            return;
+
+        t[nod] = (t[nod] + lazy[nod]);
+        if (a != b)
+        {
+            lazy[nod << 1] = (lazy[nod << 1] + lazy[nod]);
+            lazy[nod << 1 | 1] = (lazy[nod << 1 | 1] + lazy[nod]);
+        }
+        lazy[nod] = 0;
+    }
+
+    void update(ll nod, ll a, ll b, ll l, ll r, ll x)
+    {
+        push(nod, a, b);
+        if (r < a || b < l)
+            return;
+        if (l <= a && b <= r)
+        {
+            lazy[nod] = x;
+            push(nod, a, b);
+            return;
+        }
+
+        ll mid = (a + b) >> 1;
+        update(nod << 1, a, mid, l, min(r, mid), x);
+        update(nod << 1 | 1, mid + 1, b, max(l, mid + 1), r, x);
+        t[nod] = min(t[nod << 1], t[nod << 1 | 1]);
+    }
+
+    ll query(ll nod, ll a, ll b, ll pos)
+    {
+        push(nod, a, b);
+        if (pos < a || b < pos)
+            return 0;
+
+        if (pos <= a && b <= pos)
+            return t[nod];
+        ll mid = (a + b) >> 1;
+        if (pos <= mid)
+            return query(nod << 1, a, mid, pos);
+        else
+            return query(nod << 1 | 1, mid + 1, b, pos);
+    }
+} seg;
+
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    ll tc = 1;
+    // cin >> tc;
+    while (tc--)
+    {
+        ll n, m, c;
+        cin >> n >> m >> c;
+        for (ll i = 1; i <= n; i++)
+            v[i] = c;
+        seg.build(1, 1, n);
+        while (m--)
+        {
+            char a;
+            ll l, r, val, pos;
+            cin >> a;
+            if (a == 'S')
+            {
+                cin >> l >> r >> val;
+                seg.update(1, 1, n, l, r, val);
+            }
+            else
+            {
+                cin >> pos;
+                cout << seg.query(1, 1, n, pos) << "\n";
+            }
+        }
+
+        // cout << "\n";
+    }
+
+    return 0;
+}
