@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main(void)
+{
+	int i,t,n,m,x,y;
+	scanf("%d",&t);
+	for(i=0;i<t;i++)
+	{
+		scanf("%d%d%d%d",&n,&m,&x,&y);
+		y=2*x>=y?y:2*x;
+		if((m!=1||n!=1)&&n*m%2==0)
+			printf("%d\n",y*n*m/2);
+		else if(m==1&&n==1)
+			printf("%d\n",x);
+		else
+		{
+			x=x>=y?y:x;
+			printf("%d\n",(y*n*m-y)/2+x);
+		}
+	}
+	return 0;
+}
