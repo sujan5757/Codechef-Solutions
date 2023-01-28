@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main()
+{  
+    int n;
+    char cha;
+    
+    scanf("%d",&n);
+    n = 2*n+1;       // count of spaces
+    while(n--)
+	{   
+	    scanf("%c",&cha);
+	   // getchar();
+	    
+	    if(cha =='B' || cha =='b')
+	    {
+	        printf("BattleShip\n");
+	    }
+	    
+	    else if(cha=='C' || cha =='c')
+	    {
+	        printf("Cruiser\n");
+	    }
+	   
+	    else if(cha=='D' || cha =='d')
+	    {
+	        printf("Destroyer\n");
+	    }
+	    
+	    else if(cha=='F' || cha =='f')
+	    {
+	        printf("Frigate\n");
+	    }
+	    
+	  
+	}
+	return 0;
+}
