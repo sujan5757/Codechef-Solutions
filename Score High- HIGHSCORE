@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+	// your code goes here
+	int t;
+	scanf("%d",&t);
+  while(t--){
+    int n,arr[4],sum,c;
+    scanf("%d",&n);
+    for(c = 0; c<4; c++){
+      scanf("%d",&arr[c]);
+      sum = arr[0];
+    }
+      for(c=0; c<4; c++){
+        if(arr[c]>sum)
+        sum = arr[c];
+      }
+      printf("%d\n",sum);
+    
+  }
+	return 0;
+}
+
