@@ -1,0 +1,250 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define lli long long int
+#define inf 10000
+
+/*
+void merge(lli arr[], lli l, lli m, lli r)
+{
+    lli i, j, k;
+    lli n1 = m - l + 1;
+    lli n2 = r - m;
+    lli L[n1], R[n2];
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+    i = 0; 
+    j = 0;
+    k = l; 
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+ 
+void mergeSort(lli arr[], lli l, lli r)
+{
+    if (l < r) {
+        lli m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+
+int max(int a, int b)
+{
+    int m = a;
+    if(b>a)
+        m = b;
+    return m;
+}
+
+int min(int a, int b)
+{
+    int m = a;
+    if(b<a)
+        m = b;
+    return m;
+}
+*/
+struct node
+{
+    int data;
+    struct node *next;
+    //for DFS
+    struct node *parent;
+    struct node *ori_add;
+    int d;
+    int f;
+    char color;
+    int iD;
+};
+
+struct node *createNode()
+{
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->next = NULL;
+    temp->parent = NULL;
+    temp->ori_add = NULL;
+    return temp;
+};
+
+struct node **makeGraph(int size, int node[])
+{
+    struct node **arr = (struct node **)malloc(size*sizeof(struct node *));
+    int i;
+    for(i=0; i<size; i++)
+    {
+        arr[i] = (struct node *)malloc(sizeof(struct node));
+        arr[i]->data = node[i];
+        arr[i]->next = NULL;
+        arr[i]->ori_add = arr[i];
+    }
+    return arr;
+};
+
+void addEdge(struct node **G, int fro, int to, int size)
+{
+    int i;
+    struct node *temp_f, *temp_t;
+    for(i=0; i<size; i++)
+    {
+        if(G[i]->data == fro)
+        {
+            temp_f = G[i];
+            break;
+        }
+    }
+    for(i=0; i<size; i++)
+    {
+        if(G[i]->data == to)
+        {
+            temp_t = G[i];
+            break;
+        }
+    }
+    struct node *temp = temp_f->next;
+    temp_f->next = createNode();
+    temp_f->next->data = to;
+    temp_f->next->ori_add = temp_t;
+    temp_f->next->next = temp;
+}
+
+void printLinkedlist(struct node *start)
+{
+    struct node *temp = start;
+    if(temp == NULL)
+        return;
+    while(temp->next != NULL)
+    {
+        printf("%d->", temp->ori_add->data);
+        temp = temp->next;
+    }
+    printf("%d", temp->ori_add->data);
+    return;
+}
+
+void printAdjlist(struct node **G, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+    {
+        printLinkedlist(G[i]);
+        printf("\n");
+    }
+}
+
+void explore_DFS(struct node **G, int size, struct node *source, int *time_add, int S)
+{
+    source->color = 'g';
+    (*time_add)++;
+    source->d = *time_add;
+    struct node *temp_s = source;
+    while(temp_s->next != NULL)
+    {
+        struct node *v = temp_s->next->ori_add;
+        if(v->color == 'w')
+        {
+            v->parent = source;
+            v->iD = S;
+            explore_DFS(G, size, v, time_add, S);
+        }
+        temp_s = temp_s->next;
+    }
+    source->color = 'b';
+    (*time_add)++;
+    source->f = *time_add;
+}
+
+void DFS(struct node **G, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+    {
+        G[i]->parent = NULL;
+        G[i]->color = 'w';
+    }
+    int time = 0;
+    for(i=0; i<size; i++)
+    {
+        if(G[i]->color == 'w')
+        {
+            G[i]->iD = G[i]->data;
+            explore_DFS(G, size, G[i], &time, G[i]->data);
+            //printf("**************************\n");
+        }
+    }
+}
+
+
+void program()
+{
+    int n, m;
+    scanf("%d%d", &n, &m);
+    int i;
+    int node[n];
+    for ( i = 0; i < n; i++)
+    {
+        node[i] = i;
+    }
+    struct node **G = makeGraph(n, node);
+    int a, b;
+    for ( i = 0; i < m; i++)
+    {
+        scanf("%d%d", &a, &b);
+        addEdge(G, a, b, n);
+        addEdge(G, b, a, n);
+    }
+    
+    DFS(G, n);
+    
+    int q,x,y;
+    scanf("%d", &q);
+    for ( i = 0; i < q; i++)
+    {
+        scanf("%d%d", &x, &y);
+        if(G[x]->iD == G[y]->iD)
+        {
+            printf("YO\n");
+        }
+        else
+        {
+            printf("NO\n");
+        }
+    }
+    return;
+}
+
+
+int main(void) 
+{
+    long long int T;
+    scanf("%lld", &T);
+    // T = 1;
+    for (long long int i = 0; i < T; i++)
+    {
+        program();
+    }
+	return 0;
+}
+
