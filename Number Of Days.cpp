@@ -1,22 +1,31 @@
-#include<bits/stdc++.h>
-using namespace std;
-int main(){
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int cmpfunc(const void* a, const void* b) {
+    return ((int)a - (int)b);
+}
+
+int main() {
     int t;
-    cin>>t;
-    while(t--){
+    scanf("%d", &t);
+    while(t--) {
         int n;
-        cin>>n;
-        vector<int> top;
-        for(int i=0;i<n;i++){
-            int r;
-            cin>>r;
-            auto it=upper_bound(top.begin(),top.end(),r);
-            if(it==top.end()) top.push_back(r);
-            else *it=r;
+        scanf("%d", &n);
+        int a[n];
+        for(int i = 0; i < n; i++) {
+            scanf("%d", &a[i]);
         }
-        cout<<top.size()<<" ";
-        for(int i=0;i<top.size();i++) cout<<top[i]<<" ";
-        cout<<endl;
+        // Sort the array in ascending order
+        qsort(a, n, sizeof(int), cmpfunc);
+        int min_diff = INT_MAX;
+        for(int i = 0; i < n - 1; i++) {
+            int diff = abs(a[i] - a[i+1]);
+            if(diff < min_diff) {
+                min_diff = diff;
+            }
+        }
+        printf("%d\n", min_diff);
     }
     return 0;
 }
